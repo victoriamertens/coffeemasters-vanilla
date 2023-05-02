@@ -1,6 +1,6 @@
 import Store from './services/Store.js';
-import API from './services/API.js';
 import { loadData } from './services/Menu.js';
+import Router from './services/Router.js';
 
 // //With defer ti is better to wait for the event of DOMContentLoaded to occur before manipulation
 // window.addEventListener('DOMContentLoaded', () => {
@@ -23,11 +23,12 @@ import { loadData } from './services/Menu.js';
 // _.domready('test');
 
 //Adding services to make gloabl store
+window.App = {};
+App.store = Store;
+App.router = Router;
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log(App);
   loadData();
+  App.router.init();
 });
-
-window.App = {};
-App.store = Store;
