@@ -3,11 +3,16 @@ const Router = {
     document.querySelectorAll('a.navlink').forEach((a) => {
       a.addEventListener('click', (event) => {
         event.preventDefault();
-        const url = a.href; //Is the property
+        const url = a.href; //Is the property - this outputs a completely different URL
         const url2 = a.getAttribute('href'); //Is the attribute
         const url3 = event.target.href; //Target of the event, property
-        console.log('Link Clicked', url2);
+        console.log('Link Clicked', url, url2);
+        Router.go(url2);
       });
+    });
+    window.addEventListener('popstate', (event) => {
+      Router.go(event.state.route, false);
+      //This line is what allows for back button to work
     });
   },
   go: (route, addToHistory = true) => {
@@ -19,15 +24,26 @@ const Router = {
     switch (route) {
       case '/':
         pageElement = document.createElement('h1'); //Creates an h1 that only exists in memory
+        console.log('In /,', pageElement);
         pageElement.textContent = 'Menu';
         break;
       case '/order':
         pageElement = document.createElement('h1'); //Creates an h1 that only exists in memory
         pageElement.textContent = 'Order';
         break;
+      default:
+        if (route.startsWith('/product-')) {
+          pageElement = document.createElement('h1'); //Creates an h1 that only exists in memory
+          pageElement.textContent = 'Details';
+          const paramId = route.substring(route.lastIndexOf('-') + 1);
+          pageElement.dataset.id = paramId;
+        }
     }
     const cache = document.querySelector('main');
-    cache.children[0].remove();
+    console.log(document.querySelector('main').children);
+    if (cache.children[0]) {
+      cache.children[0].remove();
+    }
     cache.appendChild(pageElement);
     window.scrollX = 0;
     window.scrollY = 0;
